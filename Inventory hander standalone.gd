@@ -11,7 +11,7 @@ func setInventoryOwner():
 		if child.is_in_group("Inventory"):
 			child.get_node("Icon").player = self 
 func connectInventoryButtons():
-	$UI/GUI/Inventory/SplitFirstSlot.connect("pressed", self, "splitFirstSlot")
+	$UI/GUI/Inventory/SplitFirstSlot.connect("pressed", self, "splitFirstSlot") 
 	var combine_slots_button = $UI/GUI/Inventory/CombineSlots
 	combine_slots_button.connect("pressed", self, "combineSlots")
 	for child in inventory_grid.get_children():
@@ -21,11 +21,14 @@ func connectInventoryButtons():
 			child.connect("pressed", self, "inventorySlotPressed", [index])
 			child.connect("mouse_entered", self, "inventoryMouseEntered", [index])
 			child.connect("mouse_exited", self, "inventoryMouseExited", [index])
-var last_pressed_index: int = -1
+
+#these two variables are for double pressing inventory slot, old feature, it worked fine but wasn't fun to use 
+var last_pressed_index: int = -1 
 var last_press_time: float = 0.0
+
 export var double_press_time_inv: float = 0.4
 func inventorySlotPressed(index):
-	var button = inventory_grid.get_node("InventorySlot" + str(index))
+	var button = inventory_grid.get_node("InventorySlot" + str(index))# this get's the name of whatever nodes and splits it into the actual name and the number of the slot 
 	var icon_texture_rect = button.get_node("Icon")
 	var icon_texture = icon_texture_rect.texture	
 	if icon_texture != null:
@@ -36,7 +39,13 @@ func inventorySlotPressed(index):
 			print("Inventory slot", index, "pressed twice")
 			if icon_texture.get_path() == autoload.red_potion.get_path():
 				autoload.consumeRedPotion(self,button,inventory_grid,false,null)
-			elif icon_texture.get_path() == autoload.strawberry.get_path():
+
+			#I preloaded all the icon images in a singleton and called it "autoload"
+			#check if the icon texture matches with any of the images in the preload file... you can also check if they match directly in this script by using if icon_texture.get_path() == "res://Potions/Red potion.png": 
+
+			elif icon_texture.get_path() == autoload.strawberry.get_path(): 
+					#Do_your_item_functions_here()
+
 					kilocalories +=1
 					health += 5
 					water += 2
